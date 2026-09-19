@@ -1,0 +1,38 @@
+# HopHack Documentation
+hophacks-docs
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+.venv_unix/
+.venv_windows/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb~
+**/.ipynb_checkpoints
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.log
+*.out
+*.err
+
+# OS
+.DS_Store
+Thumbs.db
