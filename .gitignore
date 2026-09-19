@@ -1,10 +1,52 @@
-# HopHack Documentation
-hophacks-docs
+# EmerFlow: the only .gitignore in the repo, organized by module.
+# Patterns without a leading path apply everywhere; module sections are anchored to that module.
+
+# ============================================================================
+# Everywhere
+# ============================================================================
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+*.swp
+
+# Local AI-assistant config (desktop preview servers, personal settings)
+.claude/
+
+# Secrets and local environment files
+.env*
+!.env.example
+*.pem
+
+# Logs and run output
+*.log
+*.out
+*.err
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ============================================================================
+# Python (agent-workflow/server, data-gen, capacity-map/scripts)
+# ============================================================================
+
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
 
 # Virtual environments
 .venv/
-env/
 venv/
+env/
 ENV/
 .venv_unix/
 .venv_windows/
@@ -12,27 +54,58 @@ ENV/
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb~
-**/.ipynb_checkpoints
 
-# PyCharm / JetBrains
-.idea/
-*.iml
+# ============================================================================
+# Node / Next.js (agent-workflow, capacity-map)
+# ============================================================================
 
-# VS Code
-.vscode/
-*.code-workspace
+node_modules/
+.next/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+coverage/
 
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-*.log
-*.out
-*.err
+# Yarn / pnpm (the repo uses npm, but keep other package managers' state out)
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# OS
-.DS_Store
-Thumbs.db
+# ============================================================================
+# Repo root
+# ============================================================================
+
+# HopHacks event documents (kept locally, not published)
+/hophacks-docs/
+
+# ============================================================================
+# agent-workflow/  (ui package, SimPy server, Next.js demo)
+# ============================================================================
+
+/agent-workflow/demo/out/
+/agent-workflow/demo/build/
+# ui/styles.css and ui/src/fixtures/ are generated but committed on purpose:
+# apps without Tailwind and the offline demo need them.
+
+# ============================================================================
+# capacity-map/  (ui package, Next.js demo, scripts)
+# ============================================================================
+
+/capacity-map/demo/out/
+/capacity-map/demo/build/
+# Like agent-workflow: ui/styles.css and ui/src/fixtures/ are generated but committed.
+
+# ============================================================================
+# data-gen/  (synthetic hospital operations and patient records)
+# ============================================================================
+
+# Generated data (hospital-op/output, patient-records/output): rebuild with generate.py,
+# the same seed gives the same files
+/data-gen/**/output/
+
+# Synthea download and its output (get_synthea.sh creates synthea/ where it runs)
+/data-gen/**/synthea/
