@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "capacity-map",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "demo", "--prefix", "capacity-map"],
+      "port": 3001
+    }
+  ]
+}

@@ -102,7 +102,11 @@ body and return the same event.
 - Python 3.10+ with `server/requirements.txt` (simpy, fastapi, uvicorn).
 - `GET /run?casualties=25&seed=1234&pace=1.0` streams events as Server-Sent Events.
   `seed` replays the same crisis exactly; `pace` scales the pauses between steps (0 = no pauses).
-- CORS: only `http://localhost:3000` is allowed by default. Allow other pages with
+- `GET /region?incident=true` returns every hospital in the demo region with its current ER/ICU load
+  and an `open | busy | critical` status, plus any active incident. `GET /simulate?lat&lon&casualties`
+  plays a what-if incident forward 3 hours. Both are used by the public capacity map
+  ([`../capacity-map`](../capacity-map)). See `server/region.py`.
+- CORS: only `http://localhost:3000` and `:3001` (the capacity map) are allowed by default. Allow other pages with
   `ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173 npm run server`.
 
 ### The event protocol (the contract)
@@ -248,7 +252,8 @@ npm run check              # protocol check over 300 simulated runs + typecheck 
 | `ui/styles.css` | Prebuilt CSS for apps without Tailwind (`npm run css`) |
 | `server/protocol.py` | Python event builders (mirror of `protocol.ts`) |
 | `server/workflow.py` | The decision pipeline and its agents |
-| `server/hospital.py` | SimPy hospital model |
+| `server/hospital.py` | SimPy hospital model (`load` and `scale` make hospitals of different sizes and busyness) |
+| `server/region.py` | Regional view for `GET /region` and `GET /simulate`: one simulated hospital per real hospital, casualty distribution |
 | `server/server.py` | FastAPI SSE endpoint |
 | `server/check.py`, `server/record_fixture.py` | Protocol check / recording |
 

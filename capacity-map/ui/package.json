@@ -1,0 +1,34 @@
+{
+  "name": "@hospital-swarm/capacity-map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public hospital capacity map: live ER load, closest hospitals, emergency news and a what-if incident simulator.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./styles.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build:css": "tailwindcss -i styles.src.css -o styles.css --minify"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "react-leaflet": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4",
+    "@types/leaflet": "^1.9.12",
+    "@types/react": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

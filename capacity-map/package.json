@@ -1,0 +1,15 @@
+{
+  "name": "capacity-map",
+  "private": true,
+  "workspaces": [
+    "ui",
+    "demo"
+  ],
+  "scripts": {
+    "server": "npm run server --prefix ../agent-workflow",
+    "demo": "npm run dev --workspace capacity-map-demo",
+    "check": "../agent-workflow/server/.venv/bin/python scripts/check.py && npm run typecheck --workspace @hospital-swarm/capacity-map && npm run lint --workspace capacity-map-demo && npm run build --workspace capacity-map-demo",
+    "record": "../agent-workflow/server/.venv/bin/python scripts/record.py",
+    "css": "npm run build:css --workspace @hospital-swarm/capacity-map"
+  }
+}

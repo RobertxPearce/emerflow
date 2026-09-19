@@ -39,11 +39,14 @@ class Patient:
 
 
 class Hospital:
-    def __init__(self, seed: int):
+    def __init__(self, seed: int, load: float = 1.0, scale: float = 1.0):
+        """`load` scales how busy the hospital is (1.0 = typical); `scale` scales beds and nurses."""
         self.rng = random.Random(seed)
         self.env = simpy.Environment()
-        self.beds = {u: simpy.PriorityResource(self.env, c["beds"]) for u, c in UNITS.items()}
-        self.nurses = {u: simpy.Resource(self.env, c["nurses"]) for u, c in UNITS.items()}
+        self.load = load
+        self.capacity = {u: max(1, round(c["beds"] * scale)) for u, c in UNITS.items()}
+        self.beds = {u: simpy.PriorityResource(self.env, self.capacity[u]) for u in UNITS}
+        self.nurses = {u: simpy.Resource(self.env, max(1, round(c["nurses"] * scale))) for u, c in UNITS.items()}
         self.nurse_busy_until: dict[str, list[float]] = {u: [] for u in UNITS}
         self.in_unit: dict[str, dict[str, Patient]] = {u: {} for u in UNITS}
         self.admissions = 0
@@ -51,7 +54,7 @@ class Hospital:
         self._next_id = 1000
 
         for unit, cfg in UNITS.items():
-            for _ in range(round(cfg["beds"] * cfg["occupancy"])):
+            for _ in range(round(self.capacity[unit] * min(cfg["occupancy"] * load, 1.0))):
                 p = self.new_patient(severity=self.census_severity(unit))
                 if unit == "ICU":
                     p.stable = self.rng.random() < 0.2
@@ -73,7 +76,7 @@ class Hospital:
         self.env.run(until=t)
 
     def free_beds(self, unit: str) -> int:
-        return UNITS[unit]["beds"] - self.beds[unit].count - len(self.beds[unit].queue)
+        return self.capacity[unit] - self.beds[unit].count - len(self.beds[unit].queue)
 
     def next_nurse_free(self, unit: str) -> float:
         """Minutes until a nurse on this unit can take a new patient."""
@@ -91,7 +94,7 @@ class Hospital:
                     "code": u,
                     "name": c["name"],
                     "occupied": self.beds[u].count,
-                    "capacity": c["beds"],
+                    "capacity": self.capacity[u],
                     "waiting": len(self.beds[u].queue),
                 }
                 for u, c in UNITS.items()
@@ -130,7 +133,7 @@ class Hospital:
 
     def routine_admissions(self, unit: str):
         cfg = UNITS[unit]
-        rate = cfg["beds"] * cfg["occupancy"] / cfg["los"]
+        rate = self.capacity[unit] * cfg["occupancy"] * self.load / cfg["los"]
         while True:
             yield self.env.timeout(self.rng.expovariate(rate))
             p = self.new_patient(severity=self.census_severity(unit))
@@ -141,7 +144,7 @@ class Hospital:
             )
 
     def routine_nursing(self, unit: str):
-        rate = UNITS[unit]["nurses"] * NURSE_UTILIZATION / 30
+        rate = self.nurses[unit].capacity * NURSE_UTILIZATION / 30
         while True:
             yield self.env.timeout(self.rng.expovariate(rate))
             self.env.process(self.nurse_task(unit, self.rng.uniform(15, 45)))
