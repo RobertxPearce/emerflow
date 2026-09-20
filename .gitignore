@@ -1,10 +1,3 @@
-# EmerFlow: the only .gitignore in the repo, organized by module.
-# Patterns without a leading path apply everywhere; module sections are anchored to that module.
-
-# ============================================================================
-# Everywhere
-# ============================================================================
-
 # OS
 .DS_Store
 Thumbs.db
@@ -26,17 +19,12 @@ Thumbs.db
 
 # Logs and run output
 *.log
-*.out
-*.err
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# ============================================================================
-# Python (agent-workflow/server, data-gen, capacity-map/scripts)
-# ============================================================================
-
+# Python (backend/, tests/, tools/)
 __pycache__/
 *.py[cod]
 *.so
@@ -48,19 +36,16 @@ __pycache__/
 venv/
 env/
 ENV/
-.venv_unix/
-.venv_windows/
 
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb~
 
-# ============================================================================
-# Node / Next.js (agent-workflow, capacity-map)
-# ============================================================================
-
+# Node / Next.js (web/, frontend/ — each also has its own .gitignore)
 node_modules/
 .next/
+/web/out/
+/frontend/dist/
 *.tsbuildinfo
 next-env.d.ts
 .vercel/
@@ -75,37 +60,13 @@ coverage/
 !.yarn/releases
 !.yarn/versions
 
-# ============================================================================
-# Repo root
-# ============================================================================
+# Browser-automation scratch output (tools/record_deepchart_demo.cjs)
+.playwright-mcp/
+
+# Recorded agent runs. Live runs are written here and are not committed;
+# demo.jsonl is the replay the deploy uses (MODE=replay), so it is kept.
+backend/agents/replays/*.jsonl
+!backend/agents/replays/demo.jsonl
 
 # HopHacks event documents (kept locally, not published)
 /hophacks-docs/
-
-# ============================================================================
-# agent-workflow/  (ui package, SimPy server, Next.js demo)
-# ============================================================================
-
-/agent-workflow/demo/out/
-/agent-workflow/demo/build/
-# ui/styles.css and ui/src/fixtures/ are generated but committed on purpose:
-# apps without Tailwind and the offline demo need them.
-
-# ============================================================================
-# capacity-map/  (ui package, Next.js demo, scripts)
-# ============================================================================
-
-/capacity-map/demo/out/
-/capacity-map/demo/build/
-# Like agent-workflow: ui/styles.css and ui/src/fixtures/ are generated but committed.
-
-# ============================================================================
-# data-gen/  (synthetic hospital operations and patient records)
-# ============================================================================
-
-# Generated data (hospital-op/output, patient-records/output): rebuild with generate.py,
-# the same seed gives the same files
-/data-gen/**/output/
-
-# Synthea download and its output (get_synthea.sh creates synthea/ where it runs)
-/data-gen/**/synthea/

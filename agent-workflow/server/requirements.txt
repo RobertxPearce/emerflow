@@ -1,3 +1,0 @@
-simpy>=4.1
-fastapi>=0.115
-uvicorn>=0.30

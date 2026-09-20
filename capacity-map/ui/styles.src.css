@@ -1,6 +1,0 @@
-/* Source for styles.css: only the utility classes the components use, no global reset,
-   so it is safe to load in an app that doesn't use Tailwind. Rebuild: npm run build:css */
-@layer theme, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
-@source "./src";
